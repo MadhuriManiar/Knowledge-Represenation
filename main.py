@@ -17,15 +17,20 @@ def negate_var(var):
 def resolve(clause1, clause2):
     clause_to_remove = []
     counter = 0
-    
     for x in clause1:
         for y in clause2:
+            clause_x = x
+            if x[0] == '~':
+                clause_x = x[1:]
+            clause_y = y
+            if y[0] == '~':
+                clause_y = y[1:]
             if len(x) - len(y) != 0:
-                if x[-1] == y[-1]:
+                if clause_x == clause_y:
                     counter += 1
                     if counter > 1:
                         return None
-                    clause_to_remove.append(x[-1])
+                    clause_to_remove.append(clause_x)
     if counter == 0:
         return None
     for c in clause1:
@@ -42,7 +47,6 @@ if len(sys.argv) == 2:
 file1 = open(input_file, "r")
 num = 1
 readList = file1.readlines()
-
 for rl in range(len(readList)):
     readList[rl] = readList[rl].strip()
 for x in readList:
@@ -54,17 +58,22 @@ for x in readList:
             t = negate_var(y)
             arr = [t]
             knowledge_base.append(arr.copy())
-            print(line)
             result = ' '.join(arr)
-            print(result)
+            print(f"{line}. {result} {{}}")
             #print(f"{line}. {t}")
             line += 1
-            clause_dict[str(arr.copy())] = arr.copy()
+            new_arr = arr.copy()
+            new_arr.sort()
+            clause_dict[str(new_arr)] = new_arr
     else: 
         knowledge_base.append(var)
-        print(f"{line}. {str(var)}")
+        result = ' '.join(var)
+        print(f"{line}. {result} {{}}")
+        #print(f"{line}. {str(var)}")
         line += 1
-        clause_dict[str(var)] = var
+        new_arr = var.copy()
+        new_arr.sort()
+        clause_dict[str(new_arr)] = new_arr
     num+=1
 clauses = knowledge_base
 ptr1 = 0
@@ -76,21 +85,25 @@ while ptr2 < length:
         new_clause = resolve(clauses[ptr2].copy(), clauses[ptr1].copy())
         if new_clause is not None:
             new_clause = list(new_clause)
+            new_clause.sort()
             if len(new_clause) == 0:
-                print(f"{line}. Contradiction")
+                print(f"{line}. Contradiction {{{ptr2+1} , {ptr1+1}}}")
                 print("Valid")
                 length = 0
-                break
+                sys.exit()
+            clause_str = ""
             if str(new_clause) not in clause_dict:
-                new_clause.sort()
                 clauses.append(new_clause)
-                print(f"{line}. {str(new_clause)}")
+                result = ' '.join(new_clause)
+                print(f"{line}. {result} {{{ptr2+1} , {ptr1+1}}}")
+                #print(f"{line}. {str(new_clause)}")
                 line += 1
                 clause_dict[str(new_clause)] = new_clause
             #print(f"New clause: {new_clause} {(ptr2)}, {(ptr1)}")
             length = len(clauses)
         ptr1 += 1
     ptr2 += 1
+print("False")   
     #print("clauses: ", clauses)
 
 
