@@ -54,7 +54,10 @@ for x in readList:
             t = negate_var(y)
             arr = [t]
             knowledge_base.append(arr.copy())
-            print(f"{line}. {t}")
+            print(line)
+            result = ' '.join(arr)
+            print(result)
+            #print(f"{line}. {t}")
             line += 1
             clause_dict[str(arr.copy())] = arr.copy()
     else: 
@@ -75,6 +78,7 @@ while ptr2 < length:
             new_clause = list(new_clause)
             if len(new_clause) == 0:
                 print(f"{line}. Contradiction")
+                print("Valid")
                 length = 0
                 break
             if str(new_clause) not in clause_dict:
