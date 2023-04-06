@@ -78,6 +78,7 @@ while ptr2 < length:
                 length = 0
                 break
             if str(new_clause) not in clause_dict:
+                new_clause.sort()
                 clauses.append(new_clause)
                 print(f"{line}. {str(new_clause)}")
                 line += 1
@@ -88,17 +89,4 @@ while ptr2 < length:
     ptr2 += 1
     #print("clauses: ", clauses)
 
-def valid(file):
-    pass
 
-def printSolution():
-    pass
-
-def printFailure():
-
-    pass
-
-if valid(input_file):
-    printSolution()
-else:
-    printFailure()
